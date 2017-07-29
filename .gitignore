@@ -25,3 +25,7 @@ hs_err_pid*
 target/
 #test
 test/
+#eclipse product
+maven-status/
+#project
+.project
