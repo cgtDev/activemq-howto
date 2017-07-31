@@ -23,8 +23,10 @@ public class SelectiveTickerConsumer {
         connection = connectionFactory.createConnection();
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        destination = session.createTopic("EVENTS.QUOTES");
+        destination = session.createTopic("EVENTS.stock");
+        //获取指定的topic
         selector = System.getProperty("QuoteSel", "symbol = 'GOOG'");
+        //System.out.println("QuoteSel====");
     }
 
     public void after() throws Exception {
@@ -35,9 +37,12 @@ public class SelectiveTickerConsumer {
 
     public void run() throws Exception {
         System.out.println(" Running example with selector: " + selector);
+        //定义一个带过滤指定topic的消息消费者
         MessageConsumer consumer = session.createConsumer(destination, selector);
+        //设置消息监听
         consumer.setMessageListener(new EventListener());
-        TimeUnit.MINUTES.sleep(5);
+        //闲置２分钟后结束该线程
+        TimeUnit.MINUTES.sleep(2);
         connection.stop();
         consumer.close();
     }
